@@ -1,8 +1,14 @@
-// In the Transactions.js component
-
-import React from "react";
+import React, { useState } from "react";
+import { MdDelete } from "react-icons/md";
 
 const Transactions = ({ transactionData, onDeleteTransaction }) => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
+  };
+  const filteredTransactions = transactionData.filter((item) => {
+    return item.description.toLowerCase().includes(searchQuery.toLowerCase());
+  });
   return (
     <div className="flex text-center flex-col gap-3 w-9/12">
       <p className="text-lg md:text-2xl tracking-widest text-[#7D7C7C]">
@@ -12,9 +18,11 @@ const Transactions = ({ transactionData, onDeleteTransaction }) => {
         type="text"
         placeholder="Search"
         className="outline-none p-2 border rounded-sm mt-3"
+        value={searchQuery}
+        onChange={handleSearch}
       />
       {transactionData.length > 0 ? (
-        transactionData.map((item) => (
+        filteredTransactions.map((item) => (
           <div
             key={item.id}
             className={`flex justify-between p-2 mt-2 border border-slate-400 ${
@@ -27,7 +35,7 @@ const Transactions = ({ transactionData, onDeleteTransaction }) => {
             <div className="flex items-center justify-center space-x-4">
               <p>$ {item.amount}</p>
               <button onClick={() => onDeleteTransaction(item.id)}>
-                Delete
+                <MdDelete size={23} />
               </button>
             </div>
           </div>
